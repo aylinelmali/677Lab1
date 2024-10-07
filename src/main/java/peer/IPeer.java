@@ -2,12 +2,16 @@ package peer;
 
 import product.Product;
 
+import java.rmi.Remote;
 import java.util.List;
 
-public interface IPeer extends Runnable {
-    void lookup(int buyerID, Product product, int hopCount, List<Integer> searchPath);
-    void reply(int sellerID, List<Integer> replyPath);
-    void buy(int peerID, List<Integer> path);
+public interface IPeer extends Remote {
+
+    int MAX_HOP_COUNT = 3;
+
+    void lookup(int buyerID, Product product, int hopCount, int[] searchPath);
+    void reply(int sellerID, int[] replyPath);
+    void buy(int peerID,int[] path);
     int getPeerID();
-    List<Integer> getNeighbors();
+    List<IPeer> getNeighbors();
 }

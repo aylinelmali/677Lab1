@@ -2,7 +2,9 @@ package peer;
 
 import product.Product;
 
+import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Seller extends APeer {
@@ -10,7 +12,7 @@ public class Seller extends APeer {
     private int itemStock;
     private Product productType;
 
-    public Seller(int peerID, List<Integer> neighbors, int stock) {
+    public Seller(int peerID, List<Integer> neighbors, int stock) throws RemoteException {
         super(peerID, neighbors);
         this.itemStock = stock;
         this.productType = getRandomProduct();
@@ -30,26 +32,30 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void lookup(int buyerID, Product product, int hopCount, List<Integer> searchPath) {
+    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) {
 
     }
 
     @Override
-    public void reply(int sellerID, List<Integer> replyPath) {
+    public void reply(int sellerID, int[] replyPath) {
 
     }
 
     @Override
-    public void buy(int peerID, List<Integer> path) {
+    public void buy(int peerID, int[] path) {
 
     }
 
     @Override
-    public void run() {
-
+    public List<IPeer> getNeighbors() {
+        return List.of();
     }
 
     public Product getProductType() {
         return productType;
+    }
+
+    public static void main(String[] args) {
+
     }
 }

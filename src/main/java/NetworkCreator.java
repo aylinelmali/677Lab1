@@ -5,7 +5,10 @@ import peer.Seller;
 import java.net.*;
 import java.util.*;
 
-public class Main {
+public class NetworkCreator {
+
+    public static int REGISTRY_ID = 1099;
+
     public static void main(String[] args) throws Exception {
         int N = Integer.parseInt(args[0]);  // Number of peers
         List<IPeer> peers = createNetwork(N);
