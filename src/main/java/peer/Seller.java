@@ -1,6 +1,7 @@
 package peer;
 
 import product.Product;
+import utils.Logger;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -33,17 +34,34 @@ public class Seller extends APeer {
 
     @Override
     public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) {
-
+        if(this.productType.equals(product) && itemStock > 0){
+            reply(peerID, searchPath);
+        }
+        else{
+            forward(buyerID, product, hopCount, searchPath);
+        }
     }
 
     @Override
     public void reply(int sellerID, int[] replyPath) {
-
+        int peerIndex = getPeerIndex(replyPath);
+        if (peerIndex > 0) { // this peer should forward the message to the next peer in the path
+            getNeighbors().get(peerIndex - 1).reply(sellerID, replyPath);
+        }
     }
 
     @Override
     public void buy(int peerID, int[] path) {
-
+        if (decrementStock()) {
+            System.out.println("Transaction successful with buyer " + peerID + ". Remaining stock: " + itemStock);
+            if(itemStock <= 0){
+                Random rand = new Random();
+                this.productType = getRandomProduct();
+                this.itemStock = rand.nextInt(10);
+            }
+        } else {
+            System.out.println("Out of stock! Cannot complete the transaction.");
+        }
     }
 
     @Override
