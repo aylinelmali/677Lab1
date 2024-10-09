@@ -36,9 +36,11 @@ public class Seller extends APeer {
     public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) {
         if(this.productType.equals(product) && itemStock > 0){
             reply(peerID, searchPath);
+            Logger.log("Lookup request from buyer " + buyerID + " for " + product + " - Seller found: " + peerID);
         }
         else{
             forward(buyerID, product, hopCount, searchPath);
+            Logger.log("Lookup request from buyer " + buyerID + " for " + product + " forwarded by peer " + peerID);
         }
     }
 
@@ -53,14 +55,15 @@ public class Seller extends APeer {
     @Override
     public void buy(int peerID, int[] path) {
         if (decrementStock()) {
-            System.out.println("Transaction successful with buyer " + peerID + ". Remaining stock: " + itemStock);
+            String logMessage = "Bought " + productType + " from seller " + peerID + ". Remaining stock: " + itemStock;
+            Logger.log(logMessage);
             if(itemStock <= 0){
                 Random rand = new Random();
                 this.productType = getRandomProduct();
                 this.itemStock = rand.nextInt(10);
             }
         } else {
-            System.out.println("Out of stock! Cannot complete the transaction.");
+            Logger.log("Seller " + peerID + " is out of stock! Cannot complete the transaction.");
         }
     }
 
