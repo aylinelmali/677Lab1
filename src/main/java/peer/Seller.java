@@ -4,19 +4,23 @@ import product.Product;
 import utils.Logger;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class Seller extends APeer {
 
+    public static void main(String[] args) {
+
+    }
+
     private int itemStock;
     private Product productType;
 
-    public Seller(int peerID, List<Integer> neighbors, int stock) throws RemoteException {
-        super(peerID, neighbors);
-        this.itemStock = stock;
-        this.productType = getRandomProduct();
+    public Seller(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
+        super(peerID, neighbors, registry);
+        this.itemStock = new Random().nextInt(1, 6);
+        this.productType = Product.pickRandomProduct();
     }
 
     public boolean decrementStock() {
@@ -27,9 +31,9 @@ public class Seller extends APeer {
         return false;
     }
 
-    private Product getRandomProduct() {
-        Product[] products = Product.values();
-        return products[new Random().nextInt(products.length)];
+    @Override
+    public void start() {
+
     }
 
     @Override
@@ -59,7 +63,7 @@ public class Seller extends APeer {
             Logger.log(logMessage);
             if(itemStock <= 0){
                 Random rand = new Random();
-                this.productType = getRandomProduct();
+                this.productType = Product.pickRandomProduct();
                 this.itemStock = rand.nextInt(10);
             }
         } else {
@@ -74,9 +78,5 @@ public class Seller extends APeer {
 
     public Product getProductType() {
         return productType;
-    }
-
-    public static void main(String[] args) {
-
     }
 }

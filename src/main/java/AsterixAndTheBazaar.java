@@ -1,6 +1,12 @@
+import peer.Buyer;
 import peer.IPeer;
+import peer.Seller;
 
 import java.net.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.*;
 
 public class AsterixAndTheBazaar {
@@ -11,9 +17,10 @@ public class AsterixAndTheBazaar {
     public static void main(String[] args) throws Exception {
         int n = Integer.parseInt(args[0]);  // Number of peers
         List<IPeer> peers = createNetwork(n);
+        peers.forEach(IPeer::start);
     }
 
-    public static List<IPeer> createNetwork(int n) throws SocketException {
+    public static List<IPeer> createNetwork(int n) throws InterruptedException, RemoteException, NotBoundException {
         List<IPeer> peers = new ArrayList<>();
 
         Map<Integer, List<Integer>> nodes = new HashMap<>();
@@ -46,31 +53,35 @@ public class AsterixAndTheBazaar {
             }
         }
 
-        /**
-        for (int i = 0; i < N; i++) {
-            int port = 5000 + i;
-            List<Integer> neighbors = new ArrayList<>();
-            IPeer peer;
-            if (rand.nextDouble() < 0.5) {
-                peer = new Buyer(port, neighbors);
-            } else {
-                peer = new Seller(port, neighbors, rand.nextInt(10));
-            }
-            peers.add(peer);
+        for (int nodeIndex = 0; nodeIndex < n; nodeIndex++) {
+            Thread t = getThread(nodeIndex, nodes.get(nodeIndex));
+            t.start();
         }
 
-        // Ensure each peer has up to 3 neighbors
-        for (IPeer peer : peers) {
-            Collections.shuffle(peers);
-            List<IPeer> potentialNeighbors = new ArrayList<>(peers);
-            potentialNeighbors.remove(peer);  // A peer cannot be its own neighbor
-            for (int i = 0; i < Math.min(3, potentialNeighbors.size()); i++) {
-                peer.getNeighbors().add(potentialNeighbors.get(i).getPeerID());
-            }
+        Thread.sleep(1000); // ensure that all peers are bound
+
+        Registry registry = LocateRegistry.createRegistry(1009);
+
+        for (int nodeIndex = 0; nodeIndex < n; nodeIndex++) {
+            peers.add((IPeer) registry.lookup("" + nodeIndex));
         }
-        */
 
         return peers;
+    }
+
+    private static Thread getThread(int nodeIndex, List<Integer> neighbors) {
+        return new Thread(() -> {
+            try {
+                Registry registry = LocateRegistry.getRegistry("localhost", 1009);
+                boolean isSeller = Math.random() < 0.5;
+
+                IPeer peer = isSeller ? new Seller(nodeIndex, neighbors, registry) : new Buyer(nodeIndex, neighbors, registry);
+                registry.rebind("" + peer.getPeerID(), peer);
+
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
 

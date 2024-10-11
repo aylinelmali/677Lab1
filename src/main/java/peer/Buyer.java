@@ -2,9 +2,7 @@ package peer;
 
 import product.Product;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -13,10 +11,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Buyer extends APeer {
 
+    /**
     public static void main(String[] args) throws RemoteException {
 
-        int id = Integer.parseInt(args[1]);
-        String[] neighbourStrings = args[2].split(",");
+        int id = Integer.parseInt(args[0]);
+        String[] neighbourStrings = args[1].split(",");
         List<Integer> neighbours = new ArrayList<>();
         for (String neighbourString : neighbourStrings) {
             neighbours.add(Integer.parseInt(neighbourString));
@@ -28,17 +27,18 @@ public class Buyer extends APeer {
 
         registry.rebind("" + peer.getPeerID(), peer);
     }
+     */
 
-    private List<SellerIdReplyPathPair> sellers;
-    private Registry registry;
-    private List<IPeer> neighborPeers;
+    private final List<SellerIdReplyPathPair> sellers;
 
     public Buyer(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
-        super(peerID, neighbors);
+        super(peerID, neighbors, registry);
 
-        this.registry = registry;
         sellers = new ArrayList<>();
+    }
 
+    @Override
+    public void start() {
         buyNewProduct();
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
@@ -86,30 +86,14 @@ public class Buyer extends APeer {
         getNeighbors().get(peerIndex + 1).buy(peerID, path);
     }
 
-    @Override
-    public List<IPeer> getNeighbors() {
-        if (neighborPeers == null) {
-            neighbors.forEach(id -> {
-                try {
-                    IPeer peer = (IPeer) registry.lookup("" + id);
-                    neighborPeers.add(peer);
-                } catch (RemoteException | NotBoundException e) {
-                    neighborPeers.clear();
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-        return neighborPeers;
-    }
-
     private void buyNewProduct() {
         Product product = Product.pickRandomProduct();
         forward(peerID, product, 0, new int[] { peerID });
     }
 
     private static class SellerIdReplyPathPair {
-        private int sellerId;
-        private int[] replyPath;
+        private final int sellerId;
+        private final int[] replyPath;
         private SellerIdReplyPathPair(int sellerID, int[] replyPath) {
             this.sellerId = sellerID;
             this.replyPath = replyPath;

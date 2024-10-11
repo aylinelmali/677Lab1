@@ -2,23 +2,45 @@ package peer;
 
 import product.Product;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public abstract class APeer extends UnicastRemoteObject implements IPeer {
     protected int peerID;
     protected List<Integer> neighbors;
+    protected List<IPeer> neighborPeers;
+    private final Registry registry;
 
-    public APeer(int peerID, List<Integer> neighbors) throws RemoteException {
+    public APeer(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
         super();
         this.peerID = peerID;
         this.neighbors = neighbors;
+
+        this.registry = registry;
     }
 
     @Override
     public int getPeerID() {
         return peerID;
+    }
+
+    @Override
+    public List<IPeer> getNeighbors() {
+        if (neighborPeers == null) {
+            neighbors.forEach(id -> {
+                try {
+                    IPeer peer = (IPeer) registry.lookup("" + id);
+                    neighborPeers.add(peer);
+                } catch (RemoteException | NotBoundException e) {
+                    neighborPeers.clear();
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        return neighborPeers;
     }
 
     protected void forward(int buyerID, Product product, int hopCount, int[] searchPath) {
