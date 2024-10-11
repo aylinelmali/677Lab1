@@ -60,7 +60,7 @@ public class Seller extends APeer {
             if(itemStock <= 0){
                 Random rand = new Random();
                 this.productType = getRandomProduct();
-                this.itemStock = rand.nextInt(10);
+                this.itemStock = 5 + rand.nextInt(10);
             }
         } else {
             Logger.log("Seller " + peerID + " is out of stock! Cannot complete the transaction.");
@@ -76,7 +76,4 @@ public class Seller extends APeer {
         return productType;
     }
 
-    public static void main(String[] args) {
-
-    }
 }

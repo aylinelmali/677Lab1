@@ -29,7 +29,7 @@ public class NetworkCreator {
             if (rand.nextDouble() < 0.5) {
                 peer = new Buyer(port, neighbors);
             } else {
-                peer = new Seller(port, neighbors, rand.nextInt(10));
+                peer = new Seller(port, neighbors, 5 + rand.nextInt(10));
             }
             peers.add(peer);
         }
