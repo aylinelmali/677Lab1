@@ -3,7 +3,10 @@ package peer;
 import product.Product;
 import utils.Logger;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -12,6 +15,8 @@ public class Seller extends APeer {
 
     private int itemStock;
     private Product productType;
+    private List<IPeer> neighborPeers;
+    private Registry registry;
 
     public Seller(int peerID, List<Integer> neighbors, int stock) throws RemoteException {
         super(peerID, neighbors);
@@ -69,7 +74,18 @@ public class Seller extends APeer {
 
     @Override
     public List<IPeer> getNeighbors() {
-        return List.of();
+        if (neighborPeers == null) {
+            neighbors.forEach(id -> {
+                try {
+                    IPeer peer = (IPeer) registry.lookup("" + id);
+                    neighborPeers.add(peer);
+                } catch (RemoteException | NotBoundException e) {
+                    neighborPeers.clear();
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        return neighborPeers;
     }
 
     public Product getProductType() {
