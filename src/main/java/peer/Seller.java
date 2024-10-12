@@ -22,7 +22,7 @@ public class Seller extends APeer {
         this.productType = Product.pickRandomProduct();
     }
 
-    public boolean decrementStock() {
+    public synchronized boolean decrementStock() {
         if (itemStock > 0) {
             itemStock--;
             return true;
@@ -56,7 +56,7 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void buy(int peerID, int[] path) {
+    public synchronized void buy(int peerID, int[] path) {
         if (decrementStock()) {
             String logMessage = "Bought " + productType + " from seller " + peerID + ". Remaining stock: " + itemStock;
             Logger.log(logMessage);
