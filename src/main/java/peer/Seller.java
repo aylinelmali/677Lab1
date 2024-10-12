@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Seller extends APeer {
 
@@ -15,6 +17,7 @@ public class Seller extends APeer {
     private Product productType;
     private List<IPeer> neighborPeers;
     private Registry registry;
+    private final Lock stockLock = new ReentrantLock();
 
     public Seller(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
         super(peerID, neighbors, registry);
@@ -23,11 +26,16 @@ public class Seller extends APeer {
     }
 
     public synchronized boolean decrementStock() {
-        if (itemStock > 0) {
-            itemStock--;
-            return true;
+        stockLock.lock();
+        try{
+            if (itemStock > 0) {
+                itemStock--;
+                return true;
+            }
+            return false;
+        } finally {
+            stockLock.unlock();
         }
-        return false;
     }
 
     @Override
@@ -57,16 +65,21 @@ public class Seller extends APeer {
 
     @Override
     public synchronized void buy(int peerID, int[] path) {
-        if (decrementStock()) {
-            String logMessage = "Bought " + productType + " from seller " + peerID + ". Remaining stock: " + itemStock;
-            Logger.log(logMessage);
-            if(itemStock <= 0){
-                Random rand = new Random();
-                this.productType = Product.pickRandomProduct();
-                this.itemStock = 5 + rand.nextInt(10);
+        stockLock.lock();
+        try {
+            if (decrementStock()) {
+                String logMessage = "Bought " + productType + " from seller " + peerID + ". Remaining stock: " + itemStock;
+                Logger.log(logMessage);
+                if(itemStock <= 0){
+                    Random rand = new Random();
+                    this.productType = Product.pickRandomProduct();
+                    this.itemStock = 5 + rand.nextInt(10);
+                }
+            } else {
+                Logger.log("Seller " + peerID + " is out of stock! Cannot complete the transaction.");
             }
-        } else {
-            Logger.log("Seller " + peerID + " is out of stock! Cannot complete the transaction.");
+        } finally {
+            stockLock.unlock();
         }
     }
 
