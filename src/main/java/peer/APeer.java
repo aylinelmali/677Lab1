@@ -28,7 +28,7 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
     }
 
     @Override
-    public List<IPeer> getNeighbors() {
+    public List<IPeer> getNeighbors() throws RemoteException {
         if (neighborPeers == null) {
             neighbors.forEach(id -> {
                 try {
@@ -43,7 +43,7 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         return neighborPeers;
     }
 
-    protected void forward(int buyerID, Product product, int hopCount, int[] searchPath) {
+    protected void forward(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
         if (hopCount >= MAX_HOP_COUNT) {
             return;
         }
@@ -59,7 +59,13 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         System.arraycopy(searchPath, 0, newSearchPath, 0, searchPath.length);
         newSearchPath[searchPath.length] = buyerID;
 
-        getNeighbors().forEach(neighbor -> neighbor.lookup(buyerID, product, hopCount, newSearchPath));
+        getNeighbors().forEach(neighbor -> {
+            try {
+                neighbor.lookup(buyerID, product, hopCount, newSearchPath);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     protected int getPeerIndex(int[] replyPath) {

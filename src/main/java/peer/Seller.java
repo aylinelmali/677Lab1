@@ -39,12 +39,12 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void start() {
+    public void start() throws RemoteException {
 
     }
 
     @Override
-    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) {
+    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
         if(this.productType.equals(product) && itemStock > 0){
             reply(peerID, searchPath);
             Logger.log("Lookup request from buyer " + buyerID + " for " + product + " - Seller found: " + peerID);
@@ -56,7 +56,7 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void reply(int sellerID, int[] replyPath) {
+    public void reply(int sellerID, int[] replyPath) throws RemoteException {
         int peerIndex = getPeerIndex(replyPath);
         if (peerIndex > 0) { // this peer should forward the message to the next peer in the path
             getNeighbors().get(peerIndex - 1).reply(sellerID, replyPath);
@@ -64,7 +64,7 @@ public class Seller extends APeer {
     }
 
     @Override
-    public synchronized void buy(int peerID, int[] path) {
+    public synchronized void buy(int peerID, int[] path) throws RemoteException {
         stockLock.lock();
         try {
             if (decrementStock()) {
@@ -82,25 +82,4 @@ public class Seller extends APeer {
             stockLock.unlock();
         }
     }
-
-    @Override
-    public List<IPeer> getNeighbors() {
-        if (neighborPeers == null) {
-            neighbors.forEach(id -> {
-                try {
-                    IPeer peer = (IPeer) registry.lookup("" + id);
-                    neighborPeers.add(peer);
-                } catch (RemoteException | NotBoundException e) {
-                    neighborPeers.clear();
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-        return neighborPeers;
-    }
-
-    public Product getProductType() {
-        return productType;
-    }
-
 }

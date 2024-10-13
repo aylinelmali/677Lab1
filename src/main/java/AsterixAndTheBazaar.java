@@ -17,7 +17,9 @@ public class AsterixAndTheBazaar {
     public static void main(String[] args) throws Exception {
         int n = Integer.parseInt(args[0]);  // Number of peers
         List<IPeer> peers = createNetwork(n);
-        peers.forEach(IPeer::start);
+        for (IPeer peer : peers) {
+            peer.start();
+        }
     }
 
     public static List<IPeer> createNetwork(int n) throws InterruptedException, RemoteException, NotBoundException {

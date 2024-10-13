@@ -38,7 +38,7 @@ public class Buyer extends APeer {
     }
 
     @Override
-    public void start() {
+    public void start() throws RemoteException {
         buyNewProduct();
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
@@ -53,24 +53,32 @@ public class Buyer extends APeer {
                     .orElseThrow();
             sellers.clear();
 
-            buy(seller.sellerId, seller.replyPath);
+            try {
+                buy(seller.sellerId, seller.replyPath);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
             try {
                 Thread.sleep(new Random().nextInt(1,3) * 1000L);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            buyNewProduct(); // restart the cycle
+            try {
+                buyNewProduct(); // restart the cycle
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
 
         }, 0, 3, TimeUnit.SECONDS);
     }
 
     @Override
-    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) {
+    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
         forward(buyerID, product, hopCount, searchPath);
     }
 
     @Override
-    public void reply(int sellerID, int[] replyPath) {
+    public void reply(int sellerID, int[] replyPath) throws RemoteException {
         int peerIndex = getPeerIndex(replyPath);
 
         if (peerIndex > 0) { // this peer should forward the message to the next peer in the path
@@ -81,12 +89,12 @@ public class Buyer extends APeer {
     }
 
     @Override
-    public void buy(int peerID, int[] path) {
+    public void buy(int peerID, int[] path) throws RemoteException {
         int peerIndex = getPeerIndex(path);
         getNeighbors().get(peerIndex + 1).buy(peerID, path);
     }
 
-    private void buyNewProduct() {
+    private void buyNewProduct() throws RemoteException {
         Product product = Product.pickRandomProduct();
         forward(peerID, product, 0, new int[] { peerID });
     }
