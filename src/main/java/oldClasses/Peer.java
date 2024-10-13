@@ -72,7 +72,7 @@ class Buyer extends Peer {
 
     protected void sendMessage(int peerId, String message) throws IOException {
         DatagramPacket packet = new DatagramPacket(message.getBytes(), message.length(),
-                InetAddress.getByName("localhost"), 5000 + peerId);
+                InetAddress.getByName("127.0.0.1"), 5000 + peerId);
         socket.send(packet);
     }
 }

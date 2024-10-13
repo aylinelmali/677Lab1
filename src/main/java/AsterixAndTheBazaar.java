@@ -55,14 +55,14 @@ public class AsterixAndTheBazaar {
             }
         }
 
+        Registry registry = LocateRegistry.createRegistry(1009);
+
         for (int nodeIndex = 0; nodeIndex < n; nodeIndex++) {
             Thread t = getThread(nodeIndex, nodes.get(nodeIndex));
             t.start();
         }
 
         Thread.sleep(1000); // ensure that all peers are bound
-
-        Registry registry = LocateRegistry.createRegistry(1009);
 
         for (int nodeIndex = 0; nodeIndex < n; nodeIndex++) {
             peers.add((IPeer) registry.lookup("" + nodeIndex));
@@ -74,7 +74,7 @@ public class AsterixAndTheBazaar {
     private static Thread getThread(int nodeIndex, List<Integer> neighbors) {
         return new Thread(() -> {
             try {
-                Registry registry = LocateRegistry.getRegistry("localhost", 1009);
+                Registry registry = LocateRegistry.getRegistry("127.0.0.1", 1009);
                 boolean isSeller = Math.random() < 0.5;
 
                 IPeer peer = isSeller ? new Seller(nodeIndex, neighbors, registry) : new Buyer(nodeIndex, neighbors, registry);
