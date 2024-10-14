@@ -6,12 +6,15 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class APeer extends UnicastRemoteObject implements IPeer {
     protected int peerID;
     protected List<Integer> neighbors;
-    protected List<IPeer> neighborPeers;
+    protected Map<Integer, IPeer> neighborPeers;
     private final Registry registry;
 
     public APeer(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
@@ -28,12 +31,13 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
     }
 
     @Override
-    public List<IPeer> getNeighbors() throws RemoteException {
+    public Map<Integer, IPeer> getNeighbors() throws RemoteException {
         if (neighborPeers == null) {
+            neighborPeers = new HashMap<>();
             neighbors.forEach(id -> {
                 try {
                     IPeer peer = (IPeer) registry.lookup("" + id);
-                    neighborPeers.add(peer);
+                    neighborPeers.put(id, peer);
                 } catch (RemoteException | NotBoundException e) {
                     neighborPeers.clear();
                     throw new RuntimeException(e);
@@ -43,25 +47,23 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         return neighborPeers;
     }
 
-    protected void forward(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
-        if (hopCount >= MAX_HOP_COUNT) {
+    protected void forward(Product product, int hopCount, int[] searchPath) throws RemoteException {
+        if (hopCount <= 0) {
             return;
         }
 
-        // check if buyerID already forwarded this message. If yes, then drop the message.
+        // check if peer already forwarded this message. If yes, then drop the message.
         for (int value : searchPath) {
-            if (buyerID == value) {
+            if (peerID == value) {
                 return;
             }
         }
 
-        int[] newSearchPath = new int[searchPath.length + 1];
-        System.arraycopy(searchPath, 0, newSearchPath, 0, searchPath.length);
-        newSearchPath[searchPath.length] = buyerID;
+        int[] newSearchPath = getNewSearchPath(searchPath);
 
-        getNeighbors().forEach(neighbor -> {
+        getNeighbors().values().forEach(neighbor -> {
             try {
-                neighbor.lookup(buyerID, product, hopCount, newSearchPath);
+                neighbor.lookup(newSearchPath[0], product, hopCount-1, newSearchPath);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -77,5 +79,12 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         }
         return peerIndex;
     }
-    
+
+    protected int[] getNewSearchPath(int[] searchPath) {
+        int[] newSearchPath = new int[searchPath.length + 1];
+        System.arraycopy(searchPath, 0, newSearchPath, 0, searchPath.length);
+        newSearchPath[searchPath.length] = peerID;
+        return newSearchPath;
+    }
+
 }

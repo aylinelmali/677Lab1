@@ -1,6 +1,7 @@
 package peer;
 
 import product.Product;
+import utils.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -11,25 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Buyer extends APeer {
 
-    /**
-    public static void main(String[] args) throws RemoteException {
-
-        int id = Integer.parseInt(args[0]);
-        String[] neighbourStrings = args[1].split(",");
-        List<Integer> neighbours = new ArrayList<>();
-        for (String neighbourString : neighbourStrings) {
-            neighbours.add(Integer.parseInt(neighbourString));
-        }
-
-        Registry registry = LocateRegistry.getRegistry("localhost", 1009);
-
-        IPeer peer = new Buyer(id, neighbours, registry);
-
-        registry.rebind("" + peer.getPeerID(), peer);
-    }
-     */
-
-    private final List<SellerIdReplyPathPair> sellers;
+    private final List<ReplyPath> sellers;
 
     public Buyer(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
         super(peerID, neighbors, registry);
@@ -46,7 +29,7 @@ public class Buyer extends APeer {
                 return;
             }
 
-            SellerIdReplyPathPair seller = sellers
+            ReplyPath seller = sellers
                     .stream()
                     .skip((int) (sellers.size() * Math.random()))
                     .findFirst()
@@ -54,7 +37,7 @@ public class Buyer extends APeer {
             sellers.clear();
 
             try {
-                buy(seller.sellerId, seller.replyPath);
+                buy(seller.replyPath);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -74,7 +57,8 @@ public class Buyer extends APeer {
 
     @Override
     public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
-        forward(buyerID, product, hopCount, searchPath);
+        forward(product, hopCount, searchPath);
+        Logger.log("Lookup request from buyer " + buyerID + " for " + product + " forwarded by peer " + peerID);
     }
 
     @Override
@@ -82,29 +66,31 @@ public class Buyer extends APeer {
         int peerIndex = getPeerIndex(replyPath);
 
         if (peerIndex > 0) { // this peer should forward the message to the next peer in the path
-            getNeighbors().get(peerIndex - 1).reply(sellerID, replyPath);
+            IPeer peer = getNeighbors().get(replyPath[peerIndex - 1]);
+            if (peer != null) {
+                peer.reply(sellerID, replyPath);
+            }
         } else if (peerIndex == 0) { // this peer is the original buyer
-            sellers.add(new SellerIdReplyPathPair(sellerID, replyPath));
+            sellers.add(new ReplyPath(replyPath));
         }
     }
 
     @Override
-    public void buy(int peerID, int[] path) throws RemoteException {
+    public void buy(int[] path) throws RemoteException {
         int peerIndex = getPeerIndex(path);
-        getNeighbors().get(peerIndex + 1).buy(peerID, path);
+        IPeer peer = getNeighbors().get(path[peerIndex + 1]);
+        if (peer != null) {
+            peer.buy(path);
+            Logger.log("Buy request from buyer " + path[0] + "forwarded by peer " + peerID);
+        } else {
+            Logger.log("Error: Couldn't forward message.");
+        }
     }
 
     private void buyNewProduct() throws RemoteException {
         Product product = Product.pickRandomProduct();
-        forward(peerID, product, 0, new int[] { peerID });
+        forward(product, MAX_HOP_COUNT, new int[] {});
     }
 
-    private static class SellerIdReplyPathPair {
-        private final int sellerId;
-        private final int[] replyPath;
-        private SellerIdReplyPathPair(int sellerID, int[] replyPath) {
-            this.sellerId = sellerID;
-            this.replyPath = replyPath;
-        }
-    }
+    private record ReplyPath(int[] replyPath) { }
 }
