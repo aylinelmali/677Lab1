@@ -1,6 +1,7 @@
 import peer.Buyer;
 import peer.IPeer;
 import peer.Seller;
+import utils.PeerConfiguration;
 
 import java.net.*;
 import java.rmi.NotBoundException;
@@ -13,6 +14,7 @@ public class AsterixAndTheBazaar {
 
     public static int REGISTRY_ID = 1099;
     public static int NEIGHBORS_AMOUNT = 3;
+    public static PeerConfiguration peerConfiguration;
 
     public static void main(String[] args) throws Exception {
         int n = Integer.parseInt(args[0]);  // Number of peers
@@ -20,6 +22,9 @@ public class AsterixAndTheBazaar {
         for (IPeer peer : peers) {
             peer.start();
         }
+
+        peerConfiguration = new PeerConfiguration();
+        peerConfiguration.setMaxHopCount(n/2);
     }
 
     public static List<IPeer> createNetwork(int n) throws InterruptedException, RemoteException, NotBoundException {
@@ -55,7 +60,7 @@ public class AsterixAndTheBazaar {
             }
         }
 
-        Registry registry = LocateRegistry.createRegistry(1009);
+        Registry registry = LocateRegistry.createRegistry(REGISTRY_ID);
 
         for (int nodeIndex = 0; nodeIndex < n; nodeIndex++) {
             Thread t = getThread(nodeIndex, nodes.get(nodeIndex));
@@ -74,10 +79,10 @@ public class AsterixAndTheBazaar {
     private static Thread getThread(int nodeIndex, List<Integer> neighbors) {
         return new Thread(() -> {
             try {
-                Registry registry = LocateRegistry.getRegistry("127.0.0.1", 1009);
+                Registry registry = LocateRegistry.getRegistry("127.0.0.1", REGISTRY_ID);
                 boolean isSeller = Math.random() < 0.5;
 
-                IPeer peer = isSeller ? new Seller(nodeIndex, neighbors, registry) : new Buyer(nodeIndex, neighbors, registry);
+                IPeer peer = nodeIndex % 2 == 0 ? new Buyer(nodeIndex, neighbors, registry, peerConfiguration) : new Seller(nodeIndex, neighbors, registry);
                 registry.rebind("" + peer.getPeerID(), peer);
 
             } catch (RemoteException e) {

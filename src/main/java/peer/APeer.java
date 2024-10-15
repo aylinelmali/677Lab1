@@ -1,17 +1,19 @@
 package peer;
 
 import product.Product;
+import utils.Logger;
+import utils.Messages;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class APeer extends UnicastRemoteObject implements IPeer {
+
     protected int peerID;
     protected List<Integer> neighbors;
     protected Map<Integer, IPeer> neighborPeers;
@@ -49,6 +51,7 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
 
     protected void forward(Product product, int hopCount, int[] searchPath) throws RemoteException {
         if (hopCount <= 0) {
+            Logger.log(Messages.getLookupDropped(searchPath[0], product, peerID));
             return;
         }
 
