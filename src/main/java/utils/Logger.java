@@ -13,7 +13,7 @@ public class Logger {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss.SSS");
 
     // Method to log messages with a timestamp
-    public static void log(String message) {
+    public synchronized static void log(String message) {
         String timestamp = LocalDateTime.now().format(formatter);
         String logMessage = timestamp + " " + message;
 
