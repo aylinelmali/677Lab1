@@ -1,6 +1,7 @@
 import peer.Buyer;
 import peer.IPeer;
 import peer.Seller;
+import utils.Logger;
 import utils.PeerConfiguration;
 
 import java.net.*;
@@ -17,14 +18,18 @@ public class AsterixAndTheBazaar {
     public static PeerConfiguration peerConfiguration;
 
     public static void main(String[] args) throws Exception {
+
         int n = Integer.parseInt(args[0]);  // Number of peers
-        List<IPeer> peers = createNetwork(n);
-        for (IPeer peer : peers) {
-            peer.start();
-        }
 
         peerConfiguration = new PeerConfiguration();
         peerConfiguration.setMaxHopCount(n/2);
+
+        List<IPeer> peers = createNetwork(n);
+        Logger.log("########## START INITIAL SETUP ##########");
+        for (IPeer peer : peers) {
+            peer.start();
+        }
+        Logger.log("########## END INITIAL SETUP ##########");
     }
 
     public static List<IPeer> createNetwork(int n) throws InterruptedException, RemoteException, NotBoundException {
@@ -34,7 +39,7 @@ public class AsterixAndTheBazaar {
         for (int i = 0; i < n; i++) {
             nodes.put(i, new ArrayList<>());
         }
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n && n > 2 || i == 0 && n == 2; i++) {
             nodes.get(i).add((i + 1) % n);
             nodes.get((i + 1) % n).add(i);
         }

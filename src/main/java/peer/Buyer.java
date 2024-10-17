@@ -27,6 +27,7 @@ public class Buyer extends APeer {
 
     @Override
     public void start() throws RemoteException {
+        Logger.log("Peer " + peerID + " (Buyer)");
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
         int initialDelay = new Random().nextInt(1,3);
@@ -34,19 +35,18 @@ public class Buyer extends APeer {
 
         executor.scheduleAtFixedRate(() -> {
             try {
-                if (sellers.isEmpty()) {
+                if (!sellers.isEmpty()) {
+                    ReplyPath seller = sellers
+                            .stream()
+                            .skip((int) (sellers.size() * Math.random()))
+                            .findFirst()
+                            .orElseThrow();
+                    sellers.clear();
+
+                    buy(product, seller.replyPath);
+                } else {
                     buyNewProduct();
-                    return;
                 }
-
-                ReplyPath seller = sellers
-                        .stream()
-                        .skip((int) (sellers.size() * Math.random()))
-                        .findFirst()
-                        .orElseThrow();
-                sellers.clear();
-
-                buy(product, seller.replyPath);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -55,8 +55,7 @@ public class Buyer extends APeer {
 
     @Override
     public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
-        forward(product, hopCount, searchPath);
-        Logger.log(Messages.getLookupForwardMessage(buyerID, product, peerID));
+        forward(buyerID, product, hopCount, searchPath);
     }
 
     @Override
@@ -66,8 +65,8 @@ public class Buyer extends APeer {
         if (peerIndex > 0) { // this peer should forward the message to the next peer in the path.
             IPeer peer = getNeighbors().get(replyPath[peerIndex - 1]);
             if (peer != null) {
-                peer.reply(sellerID, product, replyPath);
                 Logger.log(Messages.getReplyForwardMessage(sellerID, product, peerID));
+                peer.reply(sellerID, product, replyPath);
             } else {
                 Logger.log(Messages.getForwardErrorMessage());
             }
@@ -86,8 +85,8 @@ public class Buyer extends APeer {
         int peerIndex = getPeerIndex(path);
         IPeer peer = getNeighbors().get(path[peerIndex + 1]);
         if (peer != null) { // forward message to the next peer.
-            peer.buy(product, path);
             Logger.log(Messages.getBuyForwardMessage(path[0], product, peerID));
+            peer.buy(product, path);
         } else {
             Logger.log(Messages.getForwardErrorMessage());
         }
@@ -98,7 +97,7 @@ public class Buyer extends APeer {
      */
     private void buyNewProduct() throws RemoteException {
         product = Product.pickRandomProduct();
-        forward(product, peerConfiguration.getMaxHopCount(), new int[] {});
+        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {});
     }
 
     private record ReplyPath(int[] replyPath) { }

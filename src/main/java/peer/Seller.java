@@ -39,7 +39,7 @@ public class Seller extends APeer {
 
     @Override
     public void start() throws RemoteException { // method unnecessary for the seller, only buyer uses this.
-
+        Logger.log("Peer " + peerID + " (Seller), " + "Product: " + productType + ", Stock: " + itemStock);
     }
 
     @Override
@@ -48,15 +48,14 @@ public class Seller extends APeer {
             synchronized (this) {
                 if (itemStock > 0) { // product is in stock
                     int[] newSearchPath = getNewSearchPath(searchPath);
-                    reply(peerID, product, newSearchPath);
                     Logger.log(Messages.getLookupArrivedMessage(buyerID, product, peerID));
+                    reply(peerID, product, newSearchPath);
                     return;
                 }
             }
         }
         // seller doesn't have the product in stock, forward the message to the next peer.
-        forward(product, hopCount, searchPath);
-        Logger.log(Messages.getLookupForwardMessage(buyerID, product, peerID));
+        forward(buyerID, product, hopCount, searchPath);
     }
 
     @Override
@@ -65,8 +64,8 @@ public class Seller extends APeer {
         if (peerIndex > 0) { // this peer should forward the message to the next peer in the path.
             IPeer peer = getNeighbors().get(replyPath[peerIndex - 1]);
             if (peer != null) {
-                peer.reply(sellerID, product, replyPath);
                 Logger.log(Messages.getReplyForwardMessage(sellerID, product, peerID));
+                peer.reply(sellerID, product, replyPath);
             } else {
                 Logger.log(Messages.getForwardErrorMessage());
             }
@@ -95,8 +94,8 @@ public class Seller extends APeer {
             int peerIndex = getPeerIndex(path);
             IPeer neighbor = getNeighbors().get(path[peerIndex + 1]);
             if (neighbor != null) {
-                neighbor.buy(product, path);
                 Logger.log(Messages.getBuyForwardMessage(path[0], product, peerID));
+                neighbor.buy(product, path);
             } else {
                Logger.log(Messages.getForwardErrorMessage());
             }

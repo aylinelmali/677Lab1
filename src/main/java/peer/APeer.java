@@ -49,24 +49,32 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         return neighborPeers;
     }
 
-    protected void forward(Product product, int hopCount, int[] searchPath) throws RemoteException {
+    protected void forward(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
         if (hopCount <= 0) {
-            Logger.log(Messages.getLookupDropped(searchPath[0], product, peerID));
+            Logger.log(Messages.getLookupDropped(buyerID, product, peerID));
             return;
         }
 
         // check if peer already forwarded this message. If yes, then drop the message.
         for (int value : searchPath) {
             if (peerID == value) {
+                Logger.log(Messages.getLookupDropped(buyerID, product, peerID));
                 return;
             }
         }
 
         int[] newSearchPath = getNewSearchPath(searchPath);
 
+        Logger.log(Messages.getLookupForwardMessage(buyerID, product, peerID));
         getNeighbors().values().forEach(neighbor -> {
             try {
-                neighbor.lookup(newSearchPath[0], product, hopCount-1, newSearchPath);
+                // check if peer already forwarded this message. If yes, then drop the message.
+                for (int value : searchPath) {
+                    if (neighbor.getPeerID() == value) {
+                        return;
+                    }
+                }
+                neighbor.lookup(buyerID, product, hopCount-1, newSearchPath);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

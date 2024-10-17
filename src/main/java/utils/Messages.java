@@ -41,6 +41,14 @@ public class Messages {
         return "Bought " + product + " from seller " + sellerID + ". Remaining stock: " + stock;
     }
 
+    public static String getAckForwardMessage(int sellerID, Product product, int forwardPeerID) {
+        return "Ack from seller " + sellerID + " for " + product + " forwarded by peer " + forwardPeerID;
+    }
+
+    public static String getAckArrivedMessage(int sellerID, Product product, int buyerID) {
+        return "Ack from seller " + sellerID + " for " + product + " arrived at buyer " + buyerID;
+    }
+
     public static String getOutOfStockMessage(int sellerID, Product product) {
         return "Seller " + sellerID + " has no more stock for product " + product;
     }
@@ -50,6 +58,6 @@ public class Messages {
     }
 
     public static String getForwardErrorMessage() {
-        return "Error: Couldn't forward message.";
+        return "Error: Couldn't forward message!";
     }
 }
