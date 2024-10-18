@@ -8,15 +8,20 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.Random;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Seller extends APeer {
 
     private int itemStock;
     private Product productType;
 
+    private Set<String> processedRequests;
+
     public Seller(int peerID, List<Integer> neighbors, Registry registry, Product product) throws RemoteException {
         this(peerID, neighbors, registry);
         this.productType = product;
+        this.processedRequests = new HashSet<>();
     }
 
     public Seller(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
@@ -43,7 +48,7 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
+    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, String requestID) throws RemoteException {
         if (this.productType.equals(product)) { // seller sells the product
             synchronized (this) {
                 if (itemStock > 0) { // product is in stock
@@ -55,7 +60,7 @@ public class Seller extends APeer {
             }
         }
         // seller doesn't have the product in stock, forward the message to the next peer.
-        forward(buyerID, product, hopCount, searchPath);
+        forward(buyerID, product, hopCount, searchPath, requestID);
     }
 
     @Override
@@ -73,7 +78,12 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void buy(Product product, int[] path) throws RemoteException {
+    public void buy(Product product, int[] path, String requestID) throws RemoteException {
+        // Check if this request has already been processed
+        if(processedRequests.contains(requestID)){
+            return;
+        }
+        processedRequests.add(requestID);
         int sellerID = path[path.length - 1];
         if (sellerID == this.peerID) { // message arrived at seller.
             Logger.log(Messages.getBuyArrivedMessage(path[0], product, peerID));
@@ -96,7 +106,7 @@ public class Seller extends APeer {
             IPeer neighbor = getNeighbors().get(path[peerIndex + 1]);
             if (neighbor != null) {
                 Logger.log(Messages.getBuyForwardMessage(path[0], product, peerID));
-                neighbor.buy(product, path);
+                neighbor.buy(product, path, requestID);
             } else {
                Logger.log(Messages.getForwardErrorMessage());
             }

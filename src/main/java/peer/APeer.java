@@ -49,7 +49,7 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         return neighborPeers;
     }
 
-    protected void forward(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
+    protected void forward(int buyerID, Product product, int hopCount, int[] searchPath, String requestID) throws RemoteException {
         if (hopCount <= 0) {
             Logger.log(Messages.getLookupDropped(buyerID, product, peerID));
             return;
@@ -74,7 +74,7 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
                         return;
                     }
                 }
-                neighbor.lookup(buyerID, product, hopCount-1, newSearchPath);
+                neighbor.lookup(buyerID, product, hopCount-1, newSearchPath, requestID);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
