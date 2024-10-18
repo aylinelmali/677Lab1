@@ -70,6 +70,9 @@ public class AsterixAndTheBazaarTest {
             public void buy(Product product, int[] path) throws RemoteException {}
 
             @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {}
+
+            @Override
             public int getPeerID() throws RemoteException {
                 return 3;
             }
@@ -119,6 +122,9 @@ public class AsterixAndTheBazaarTest {
             public void buy(Product product, int[] path) throws RemoteException {}
 
             @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {}
+
+            @Override
             public int getPeerID() throws RemoteException {
                 return 3;
             }
@@ -165,6 +171,9 @@ public class AsterixAndTheBazaarTest {
             }
 
             @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {}
+
+            @Override
             public int getPeerID() throws RemoteException {
                 return 3;
             }
@@ -179,6 +188,58 @@ public class AsterixAndTheBazaarTest {
 
         Assertions.assertEquals(Product.BOARS, testProduct[0]);
         Assertions.assertArrayEquals(new int[] {0, 1, 2, 3}, testSearchPath[0]);
+    }
+
+    @Test
+    public void singleBranchAckTest() throws RemoteException {
+        IPeer peer0 = new Seller(0, List.of(1), registry);
+        registry.rebind("" + peer0.getPeerID(), peer0);
+        IPeer peer1 = new Buyer(1, List.of(0,2), registry, config);
+        registry.rebind("" + peer1.getPeerID(), peer1);
+        IPeer peer2 = new Seller(2, List.of(1,3), registry, Product.BOARS);
+        registry.rebind("" + peer2.getPeerID(), peer2);
+
+        final int[] testSellerID = {Integer.MAX_VALUE};
+        final Product[] testProduct = {null};
+        final int[][] testReplyPath = {null};
+
+        IPeer peer3 = new IPeer() {
+            @Override
+            public void start() throws RemoteException {}
+
+            @Override
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {}
+
+            @Override
+            public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {
+            }
+
+            @Override
+            public void buy(Product product, int[] path) throws RemoteException {}
+
+            @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {
+                testSellerID[0] = sellerID;
+                testProduct[0] = product;
+                testReplyPath[0] = path;
+            }
+
+            @Override
+            public int getPeerID() throws RemoteException {
+                return 3;
+            }
+
+            @Override
+            public Map<Integer, IPeer> getNeighbors() throws RemoteException {
+                return Map.of();
+            }
+        };
+        registry.rebind("" + peer3.getPeerID(), peer3);
+        peer0.ack(0, Product.BOARS, new int[] {3, 2, 1, 0});
+
+        Assertions.assertEquals(0, testSellerID[0]);
+        Assertions.assertEquals(Product.BOARS, testProduct[0]);
+        Assertions.assertArrayEquals(new int[] {3, 2, 1, 0}, testReplyPath[0]);
     }
 
     @Test
@@ -204,6 +265,9 @@ public class AsterixAndTheBazaarTest {
 
             @Override
             public void buy(Product product, int[] path) throws RemoteException {}
+
+            @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {}
 
             @Override
             public int getPeerID() throws RemoteException {

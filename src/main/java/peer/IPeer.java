@@ -38,6 +38,14 @@ public interface IPeer extends Remote {
     void buy(Product product, int[] path) throws RemoteException;
 
     /**
+     * Acknowledges the buy message.
+     * @param sellerID The seller that acknowledges the buy message.
+     * @param product The bought product.
+     * @param path The travelled path of the lookup. Used to find the buyer of the product.
+     */
+    void ack(int sellerID, Product product, int[] path) throws RemoteException;
+
+    /**
      * @return The ID of the peer.
      */
     int getPeerID() throws RemoteException;

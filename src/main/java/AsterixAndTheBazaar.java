@@ -29,7 +29,7 @@ public class AsterixAndTheBazaar {
         for (IPeer peer : peers) {
             peer.start();
         }
-        Logger.log("########## END INITIAL SETUP ##########");
+        Logger.log("########### END INITIAL SETUP ###########");
     }
 
     public static List<IPeer> createNetwork(int n) throws InterruptedException, RemoteException, NotBoundException {

@@ -82,6 +82,7 @@ public class Seller extends APeer {
                     Logger.log(Messages.getWrongProductMessage(path[0], product, sellerID));
                 } else if (decrementStock()) { // correct product type. Decrement stock if possible, else, pick new random product.
                     Logger.log(Messages.getBoughtMessage(sellerID, product, itemStock));
+                    ack(sellerID, product, path);
                     if (itemStock <= 0) {
                         this.productType = Product.pickRandomProduct();
                         this.itemStock = 5 + new Random().nextInt(10);
@@ -98,6 +99,20 @@ public class Seller extends APeer {
                 neighbor.buy(product, path);
             } else {
                Logger.log(Messages.getForwardErrorMessage());
+            }
+        }
+    }
+
+    @Override
+    public void ack(int sellerID, Product product, int[] path) throws RemoteException {
+        int peerIndex = getPeerIndex(path);
+        if (peerIndex > 0) { // this peer should forward the message to the next peer in the path.
+            IPeer peer = getNeighbors().get(path[peerIndex - 1]);
+            if (peer != null) {
+                Logger.log(Messages.getAckForwardMessage(sellerID, product, peerID));
+                peer.ack(sellerID, product, path);
+            } else {
+                Logger.log(Messages.getForwardErrorMessage());
             }
         }
     }

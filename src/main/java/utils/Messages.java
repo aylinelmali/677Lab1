@@ -6,7 +6,9 @@ import java.awt.*;
 
 public class Messages {
     public static String getLookupForwardMessage(int buyerID, Product product, int forwardPeerID) {
-        return "Lookup request from buyer " + buyerID + " for " + product + " forwarded by peer " + forwardPeerID;
+        return buyerID == forwardPeerID ?
+            "Lookup from buyer " + buyerID + " for " + product + " initiated" :
+            "Lookup from buyer " + buyerID + " for " + product + " forwarded by peer " + forwardPeerID;
     }
 
     public static String getLookupArrivedMessage(int buyerID, Product product, int sellerID) {
@@ -18,7 +20,9 @@ public class Messages {
     }
 
     public static String getReplyForwardMessage(int sellerID, Product product, int forwardPeerID) {
-        return "Reply from seller " + sellerID + " for " + product + " forwarded by peer " + forwardPeerID;
+        return sellerID == forwardPeerID ?
+                "Reply from seller " + sellerID + " for " + product + " initiated" :
+                "Reply from seller " + sellerID + " for " + product + " forwarded by peer " + forwardPeerID;
     }
 
     public static String getReplyArrivedMessage(int sellerID, Product product, int buyerID) {
@@ -30,7 +34,9 @@ public class Messages {
     }
 
     public static String getBuyForwardMessage(int buyerID, Product product, int forwardPeerID) {
-        return "Buy request from buyer " + buyerID + " for " + product + " forwarded by peer " + forwardPeerID;
+        return buyerID == forwardPeerID ?
+                "Buy request from buyer " + buyerID + " for " + product + " initiated" :
+                "Buy request from buyer " + buyerID + " for " + product + " forwarded by peer " + forwardPeerID;
     }
 
     public static String getBuyArrivedMessage(int buyerID, Product product, int sellerID) {
@@ -42,7 +48,9 @@ public class Messages {
     }
 
     public static String getAckForwardMessage(int sellerID, Product product, int forwardPeerID) {
-        return "Ack from seller " + sellerID + " for " + product + " forwarded by peer " + forwardPeerID;
+        return sellerID == forwardPeerID ?
+                "Ack from seller " + sellerID + " for " + product + " initiated" :
+                "Ack from seller " + sellerID + " for " + product + " forwarded by peer " + forwardPeerID;
     }
 
     public static String getAckArrivedMessage(int sellerID, Product product, int buyerID) {

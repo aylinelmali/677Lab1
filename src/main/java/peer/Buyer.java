@@ -14,15 +14,21 @@ import java.util.concurrent.TimeUnit;
 
 public class Buyer extends APeer {
 
+    private static final int MAX_RETRIES = 3;
+
     private final List<ReplyPath> sellers;
     private Product product;
     private final PeerConfiguration peerConfiguration;
+    private boolean acknowledged;
+    private int retries;
 
     public Buyer(int peerID, List<Integer> neighbors, Registry registry, PeerConfiguration peerConfiguration) throws RemoteException {
         super(peerID, neighbors, registry);
         product = Product.pickRandomProduct();
         sellers = new ArrayList<>();
         this.peerConfiguration = peerConfiguration;
+        acknowledged = true;
+        retries = 0;
     }
 
     @Override
@@ -44,6 +50,8 @@ public class Buyer extends APeer {
                     sellers.clear();
 
                     buy(product, seller.replyPath);
+                } else if (!acknowledged && retries < MAX_RETRIES) {
+                    retryBuying();
                 } else {
                     buyNewProduct();
                 }
@@ -74,6 +82,7 @@ public class Buyer extends APeer {
             Logger.log(Messages.getReplyArrivedMessage(sellerID, product, peerID));
             if (product.equals(this.product)) {
                 sellers.add(new ReplyPath(replyPath));
+                acknowledged = false;
             } else {
                 Logger.log(Messages.getWrongReplyMessage(sellerID, product, peerID));
             }
@@ -92,11 +101,35 @@ public class Buyer extends APeer {
         }
     }
 
+    @Override
+    public void ack(int sellerID, Product product, int[] path) throws RemoteException {
+        int peerIndex = getPeerIndex(path);
+
+        if (peerIndex > 0) { // this peer should forward the message to the next peer in the path.
+            IPeer peer = getNeighbors().get(path[peerIndex - 1]);
+            if (peer != null) {
+                Logger.log(Messages.getAckForwardMessage(sellerID, product, peerID));
+                peer.ack(sellerID, product, path);
+            } else {
+                Logger.log(Messages.getForwardErrorMessage());
+            }
+        } else if (peerIndex == 0) { // this peer is the original buyer, add seller to the list.
+            Logger.log(Messages.getAckArrivedMessage(sellerID, product, peerID));
+            acknowledged = true;
+        }
+    }
+
     /**
      * Picks a random new product and forwards a lookup message to each peer.
      */
     private void buyNewProduct() throws RemoteException {
         product = Product.pickRandomProduct();
+        retries = 0;
+        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {});
+    }
+
+    private void retryBuying() throws RemoteException {
+        retries++;
         forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {});
     }
 
