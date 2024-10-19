@@ -19,8 +19,9 @@ public interface IPeer extends Remote {
      * @param product The product to lookup
      * @param hopCount The current hop count. If <code>hopCount <= 0</code>, the lookup will be discarded.
      * @param searchPath The travelled path of the lookup.
+     * @param sequenceNumber Unique id for the buyer's request.
      */
-    void lookup(int buyerID, Product product, int hopCount, int[] searchPath, String requestID) throws RemoteException;
+    void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException;
 
     /**
      * Sends a reply to the buyer that called the lookup method.
@@ -35,7 +36,7 @@ public interface IPeer extends Remote {
      * @param product Product to buy.
      * @param path The travelled path of the lookup. Used to find the seller of the product.
      */
-    void buy(Product product, int[] path, String requestID) throws RemoteException;
+    void buy(Product product, int[] path) throws RemoteException;
 
     /**
      * Acknowledges the buy message.

@@ -50,17 +50,19 @@ public class AsterixAndTheBazaarTest {
         final Product[] testProduct = {null};
         final int[] testHopCount = {Integer.MAX_VALUE};
         final int[][] testSearchPath = {new int[0]};
+        final int[] testSequenceNumber = {Integer.MAX_VALUE};
 
         IPeer peer3 = new IPeer() {
             @Override
             public void start() throws RemoteException {}
 
             @Override
-            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {
                 testBuyerID[0] = buyerID;
                 testProduct[0] = product;
                 testHopCount[0] = hopCount;
                 testSearchPath[0] = searchPath;
+                testSequenceNumber[0] = sequenceNumber;
             }
 
             @Override
@@ -83,7 +85,7 @@ public class AsterixAndTheBazaarTest {
             }
         };
         registry.rebind("" + peer3.getPeerID(), peer3);
-        peer0.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] {});
+        peer0.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] {}, 0);
 
         Assertions.assertEquals(0, testBuyerID[0]);
         Assertions.assertEquals(Product.FISH, testProduct[0]);
@@ -109,7 +111,7 @@ public class AsterixAndTheBazaarTest {
             public void start() throws RemoteException {}
 
             @Override
-            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {}
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {}
 
             @Override
             public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {
@@ -159,7 +161,7 @@ public class AsterixAndTheBazaarTest {
             public void start() throws RemoteException {}
 
             @Override
-            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {}
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {}
 
             @Override
             public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {}
@@ -208,7 +210,7 @@ public class AsterixAndTheBazaarTest {
             public void start() throws RemoteException {}
 
             @Override
-            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {}
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {}
 
             @Override
             public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {
@@ -254,7 +256,7 @@ public class AsterixAndTheBazaarTest {
             public void start() throws RemoteException {}
 
             @Override
-            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath) throws RemoteException {}
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {}
 
             @Override
             public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {
@@ -289,7 +291,7 @@ public class AsterixAndTheBazaarTest {
         IPeer peer4 = new Seller(4, List.of(2), registry, Product.FISH);
         registry.rebind("" + peer4.getPeerID(), peer4);
 
-        peer1.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] { 0 });
+        peer1.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] { 0 }, 0);
 
         Assertions.assertEquals(2, testSellerID.size());
         Assertions.assertEquals(2, testProduct.size());
@@ -301,5 +303,120 @@ public class AsterixAndTheBazaarTest {
         Assertions.assertEquals(Product.FISH, testProduct.get(1));
         Assertions.assertTrue(testReplyPath.contains(List.of(0, 1, 2, 3)));
         Assertions.assertTrue(testReplyPath.contains(List.of(0, 1, 2, 4)));
+    }
+
+    @Test
+    public void similarMessagesGetDiscardedTest() throws RemoteException {
+        List<Integer> testSellerID = new ArrayList<>();
+        List<Product> testProduct = new ArrayList<>();
+        List<List<Integer>> testReplyPath = new ArrayList<>();
+
+        IPeer peer0 = new IPeer() {
+            @Override
+            public void start() throws RemoteException {}
+
+            @Override
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {}
+
+            @Override
+            public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {
+                testSellerID.add(sellerID);
+                testProduct.add(product);
+                testReplyPath.add(Arrays.stream(replyPath).boxed().toList());
+            }
+
+            @Override
+            public void buy(Product product, int[] path) throws RemoteException {}
+
+            @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {}
+
+            @Override
+            public int getPeerID() throws RemoteException {
+                return 0;
+            }
+
+            @Override
+            public Map<Integer, IPeer> getNeighbors() throws RemoteException {
+                return Map.of();
+            }
+        };
+        registry.rebind("" + peer0.getPeerID(), peer0);
+        IPeer peer1 = new Seller(1, List.of(0,2), registry, Product.BOARS);
+        registry.rebind("" + peer1.getPeerID(), peer1);
+        IPeer peer2 = new Buyer(2, List.of(1,3), registry, config);
+        registry.rebind("" + peer2.getPeerID(), peer2);
+        IPeer peer3 = new Seller(3, List.of(2), registry, Product.FISH);
+        registry.rebind("" + peer3.getPeerID(), peer3);
+
+        peer1.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] { 0 }, 0);
+        peer1.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] { 0 }, 0);
+
+        Assertions.assertEquals(1, testSellerID.size());
+        Assertions.assertEquals(1, testProduct.size());
+        Assertions.assertEquals(1, testReplyPath.size());
+
+        Assertions.assertTrue(testSellerID.contains(3));
+        Assertions.assertEquals(Product.FISH, testProduct.get(0));
+        Assertions.assertTrue(testReplyPath.contains(List.of(0, 1, 2, 3)));
+    }
+
+    @Test
+    public void distinctMessagesGetNotDiscardedTest() throws RemoteException {
+        List<Integer> testSellerID = new ArrayList<>();
+        List<Product> testProduct = new ArrayList<>();
+        List<List<Integer>> testReplyPath = new ArrayList<>();
+
+        IPeer peer0 = new IPeer() {
+            @Override
+            public void start() throws RemoteException {}
+
+            @Override
+            public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {}
+
+            @Override
+            public void reply(int sellerID, Product product, int[] replyPath) throws RemoteException {
+                testSellerID.add(sellerID);
+                testProduct.add(product);
+                testReplyPath.add(Arrays.stream(replyPath).boxed().toList());
+            }
+
+            @Override
+            public void buy(Product product, int[] path) throws RemoteException {}
+
+            @Override
+            public void ack(int sellerID, Product product, int[] path) throws RemoteException {}
+
+            @Override
+            public int getPeerID() throws RemoteException {
+                return 0;
+            }
+
+            @Override
+            public Map<Integer, IPeer> getNeighbors() throws RemoteException {
+                return Map.of();
+            }
+        };
+        registry.rebind("" + peer0.getPeerID(), peer0);
+        IPeer peer1 = new Seller(1, List.of(0,2), registry, Product.BOARS);
+        registry.rebind("" + peer1.getPeerID(), peer1);
+        IPeer peer2 = new Buyer(2, List.of(1,3), registry, config);
+        registry.rebind("" + peer2.getPeerID(), peer2);
+        IPeer peer3 = new Seller(3, List.of(2), registry, Product.FISH);
+        registry.rebind("" + peer3.getPeerID(), peer3);
+
+        peer1.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] { 0 }, 0);
+        peer1.lookup(0, Product.FISH, Integer.MAX_VALUE, new int[] { 0 }, 1);
+
+        Assertions.assertEquals(2, testSellerID.size());
+        Assertions.assertEquals(2, testProduct.size());
+        Assertions.assertEquals(2, testReplyPath.size());
+
+        Assertions.assertEquals(3, testSellerID.get(0));
+        Assertions.assertEquals(3, testSellerID.get(1));
+        Assertions.assertEquals(Product.FISH, testProduct.get(0));
+        Assertions.assertEquals(Product.FISH, testProduct.get(1));
+        Assertions.assertEquals(List.of(0,1,2,3), testReplyPath.get(0));
+        Assertions.assertEquals(List.of(0,1,2,3), testReplyPath.get(1));
     }
 }

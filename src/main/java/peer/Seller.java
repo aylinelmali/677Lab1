@@ -6,22 +6,18 @@ import utils.Messages;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.List;
-import java.util.Random;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Seller extends APeer {
 
     private int itemStock;
     private Product productType;
 
-    private Set<String> processedRequests;
+    private Map<Integer, Integer> sequenceNumbers;
 
     public Seller(int peerID, List<Integer> neighbors, Registry registry, Product product) throws RemoteException {
         this(peerID, neighbors, registry);
         this.productType = product;
-        this.processedRequests = new HashSet<>();
     }
 
     public Seller(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
@@ -44,14 +40,20 @@ public class Seller extends APeer {
 
     @Override
     public void start() throws RemoteException { // method unnecessary for the seller, only buyer uses this.
+        this.sequenceNumbers = new HashMap<>();
         Logger.log("Peer " + peerID + " (Seller), " + "Product: " + productType + ", Stock: " + itemStock);
     }
 
     @Override
-    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, String requestID) throws RemoteException {
+    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {
         if (this.productType.equals(product)) { // seller sells the product
             synchronized (this) {
+                // checks that sequence number is not used yet.
+                if (sequenceNumbers.containsKey(buyerID) && sequenceNumbers.get(buyerID) >= sequenceNumber) {
+                    return;
+                }
                 if (itemStock > 0) { // product is in stock
+                    sequenceNumbers.put(buyerID, sequenceNumber);
                     int[] newSearchPath = getNewSearchPath(searchPath);
                     Logger.log(Messages.getLookupArrivedMessage(buyerID, product, peerID));
                     reply(peerID, product, newSearchPath);
@@ -60,7 +62,7 @@ public class Seller extends APeer {
             }
         }
         // seller doesn't have the product in stock, forward the message to the next peer.
-        forward(buyerID, product, hopCount, searchPath, requestID);
+        forward(buyerID, product, hopCount, searchPath, sequenceNumber);
     }
 
     @Override
@@ -78,12 +80,7 @@ public class Seller extends APeer {
     }
 
     @Override
-    public void buy(Product product, int[] path, String requestID) throws RemoteException {
-        // Check if this request has already been processed
-        if(processedRequests.contains(requestID)){
-            return;
-        }
-        processedRequests.add(requestID);
+    public void buy(Product product, int[] path) throws RemoteException {
         int sellerID = path[path.length - 1];
         if (sellerID == this.peerID) { // message arrived at seller.
             Logger.log(Messages.getBuyArrivedMessage(path[0], product, peerID));
@@ -106,7 +103,7 @@ public class Seller extends APeer {
             IPeer neighbor = getNeighbors().get(path[peerIndex + 1]);
             if (neighbor != null) {
                 Logger.log(Messages.getBuyForwardMessage(path[0], product, peerID));
-                neighbor.buy(product, path, requestID);
+                neighbor.buy(product, path);
             } else {
                Logger.log(Messages.getForwardErrorMessage());
             }

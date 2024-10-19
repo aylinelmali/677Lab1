@@ -21,14 +21,13 @@ public class Buyer extends APeer {
     private final PeerConfiguration peerConfiguration;
     private boolean acknowledged;
     private int retries;
-
-    private String requestID;
+    private int sequenceNumber;
 
     public Buyer(int peerID, List<Integer> neighbors, Registry registry, PeerConfiguration peerConfiguration) throws RemoteException {
         super(peerID, neighbors, registry);
         product = Product.pickRandomProduct();
         sellers = new ArrayList<>();
-        requestID = UUID.randomUUID().toString();
+        sequenceNumber = 0;
         this.peerConfiguration = peerConfiguration;
         acknowledged = true;
         retries = 0;
@@ -52,7 +51,7 @@ public class Buyer extends APeer {
                             .orElseThrow();
                     sellers.clear();
 
-                    buy(product, seller.replyPath, requestID);
+                    buy(product, seller.replyPath);
                 } else if (!acknowledged && retries < MAX_RETRIES) {
                     retryBuying();
                 } else {
@@ -65,8 +64,8 @@ public class Buyer extends APeer {
     }
 
     @Override
-    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, String requestID) throws RemoteException {
-        forward(buyerID, product, hopCount, searchPath, requestID);
+    public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {
+        forward(buyerID, product, hopCount, searchPath, sequenceNumber);
     }
 
     @Override
@@ -93,12 +92,12 @@ public class Buyer extends APeer {
     }
 
     @Override
-    public void buy(Product product, int[] path, String requestID) throws RemoteException {
+    public void buy(Product product, int[] path) throws RemoteException {
         int peerIndex = getPeerIndex(path);
         IPeer peer = getNeighbors().get(path[peerIndex + 1]);
         if (peer != null) { // forward message to the next peer.
             Logger.log(Messages.getBuyForwardMessage(path[0], product, peerID));
-            peer.buy(product, path, requestID);
+            peer.buy(product, path);
         } else {
             Logger.log(Messages.getForwardErrorMessage());
         }
@@ -128,13 +127,12 @@ public class Buyer extends APeer {
     private void buyNewProduct() throws RemoteException {
         product = Product.pickRandomProduct();
         retries = 0;
-        this.requestID = UUID.randomUUID().toString(); // Generate a unique request ID
-        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, requestID);
+        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, sequenceNumber++);
     }
 
     private void retryBuying() throws RemoteException {
         retries++;
-        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, requestID);
+        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, sequenceNumber++);
     }
 
     private record ReplyPath(int[] replyPath) { }
