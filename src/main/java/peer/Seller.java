@@ -18,12 +18,14 @@ public class Seller extends APeer {
     public Seller(int peerID, List<Integer> neighbors, Registry registry, Product product) throws RemoteException {
         this(peerID, neighbors, registry);
         this.productType = product;
+        this.sequenceNumbers = new HashMap<>();
     }
 
     public Seller(int peerID, List<Integer> neighbors, Registry registry) throws RemoteException {
         super(peerID, neighbors, registry);
         this.itemStock = 5 + new Random().nextInt(10);
         this.productType = Product.pickRandomProduct();
+        this.sequenceNumbers = new HashMap<>();
     }
 
     /**

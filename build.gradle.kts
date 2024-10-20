@@ -2,6 +2,14 @@ plugins {
     id("java")
 }
 
+tasks.jar {
+    manifest {
+        attributes(
+            "Main-Class" to "AsterixAndTheBazaar"
+        )
+    }
+}
+
 group = "edu.umass"
 version = "1.0-SNAPSHOT"
 
