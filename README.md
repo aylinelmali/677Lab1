@@ -31,5 +31,5 @@ Here is an example of the last step:
 1. First `cd` into the project folder.
 2. Run `gradlew.bat build` to generate the .jar file. You will see a .jar file in `\build\libs`.
 3. Execute the jar file with `java -jar <path_to_jar_file> <number_of_peers>`.
-   - `<path_to_jar_file>`: Path to the .jar file.
+   - `<path_to_jar_file>`: Path to the .jar file. This should be the full path, starting from C:\Users\...
    - `<number_of_peers`: The number of peers in the system.
