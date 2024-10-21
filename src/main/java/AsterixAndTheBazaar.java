@@ -22,7 +22,7 @@ public class AsterixAndTheBazaar {
         int n = Integer.parseInt(args[0]);  // Number of peers
 
         peerConfiguration = new PeerConfiguration();
-        peerConfiguration.setMaxHopCount(n/2);
+        peerConfiguration.setMaxHopCount(n/Math.min(n,NEIGHBORS_AMOUNT));
 
         List<IPeer> peers = createNetwork(n);
         Logger.log("########## START INITIAL SETUP ##########");
@@ -49,7 +49,7 @@ public class AsterixAndTheBazaar {
 
                 for (int neighborIndex = 0; neighborIndex < n; neighborIndex++) {
                     if (neighborIndex != nodeIndex && // check that node is not the neighbor itself
-                            nodes.get(neighborIndex).size() < 3 && // check that neighbor doesn't have more than two neighbors
+                            nodes.get(neighborIndex).size() < NEIGHBORS_AMOUNT && // check that neighbor doesn't have more than two neighbors
                             !nodes.get(neighborIndex).contains(nodeIndex)) { // check that neighbor doesn't already have node as neighbor.
                         neighborId = neighborIndex;
                         break;
@@ -85,7 +85,6 @@ public class AsterixAndTheBazaar {
         return new Thread(() -> {
             try {
                 Registry registry = LocateRegistry.getRegistry("127.0.0.1", REGISTRY_ID);
-                boolean isSeller = Math.random() < 0.5;
 
                 IPeer peer = nodeIndex % 2 == 0 ? new Buyer(nodeIndex, neighbors, registry, peerConfiguration) : new Seller(nodeIndex, neighbors, registry);
                 registry.rebind("" + peer.getPeerID(), peer);

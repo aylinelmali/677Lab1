@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Buyer extends APeer {
 
     private static final int MAX_RETRIES = 3;
+    private static final int AVERAGE_AMOUNT = 100;
 
     private final List<ReplyPath> sellers;
     private Product product;
@@ -22,6 +23,10 @@ public class Buyer extends APeer {
     private boolean acknowledged;
     private int retries;
     private int sequenceNumber;
+
+    // for statistics:
+    private volatile long sendingTime;
+    private volatile List<Long> receivingTimeDeltas;
 
     public Buyer(int peerID, List<Integer> neighbors, Registry registry, PeerConfiguration peerConfiguration) throws RemoteException {
         super(peerID, neighbors, registry);
@@ -31,6 +36,8 @@ public class Buyer extends APeer {
         this.peerConfiguration = peerConfiguration;
         acknowledged = true;
         retries = 0;
+        sendingTime = 0;
+        receivingTimeDeltas = new ArrayList<>();
     }
 
     @Override
@@ -65,6 +72,7 @@ public class Buyer extends APeer {
 
     @Override
     public void lookup(int buyerID, Product product, int hopCount, int[] searchPath, int sequenceNumber) throws RemoteException {
+        sendingTime = System.currentTimeMillis();
         forward(buyerID, product, hopCount, searchPath, sequenceNumber);
     }
 
@@ -85,6 +93,11 @@ public class Buyer extends APeer {
             if (product.equals(this.product)) {
                 sellers.add(new ReplyPath(replyPath));
                 acknowledged = false;
+                receivingTimeDeltas.add(System.currentTimeMillis() - sendingTime);
+                if (receivingTimeDeltas.size() >= AVERAGE_AMOUNT) {
+                    Logger.logStats(Messages.getStatisticsMessage(peerID, receivingTimeDeltas));
+                    receivingTimeDeltas.clear();
+                }
             } else {
                 Logger.log(Messages.getWrongReplyMessage(sellerID, product, peerID));
             }
@@ -127,12 +140,12 @@ public class Buyer extends APeer {
     private void buyNewProduct() throws RemoteException {
         product = Product.pickRandomProduct();
         retries = 0;
-        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, sequenceNumber++);
+        lookup(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, sequenceNumber++);
     }
 
     private void retryBuying() throws RemoteException {
         retries++;
-        forward(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, sequenceNumber++);
+        lookup(peerID, product, peerConfiguration.getMaxHopCount(), new int[] {}, sequenceNumber++);
     }
 
     private record ReplyPath(int[] replyPath) { }

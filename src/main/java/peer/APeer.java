@@ -8,9 +8,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class APeer extends UnicastRemoteObject implements IPeer {
 
@@ -40,7 +38,7 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
                 try {
                     IPeer peer = (IPeer) registry.lookup("" + id);
                     neighborPeers.put(id, peer);
-                } catch (RemoteException | NotBoundException e) {
+                } catch (Exception e) {
                     neighborPeers.clear();
                     throw new RuntimeException(e);
                 }
@@ -66,19 +64,16 @@ public abstract class APeer extends UnicastRemoteObject implements IPeer {
         int[] newSearchPath = getNewSearchPath(searchPath);
 
         Logger.log(Messages.getLookupForwardMessage(buyerID, product, peerID));
-        getNeighbors().values().forEach(neighbor -> {
-            try {
-                // check if peer already forwarded this message. If yes, then drop the message.
-                for (int value : searchPath) {
-                    if (neighbor.getPeerID() == value) {
-                        return;
-                    }
+
+        for (IPeer neighbor : new ArrayList<>(getNeighbors().values())) {
+            // check if peer already forwarded this message. If yes, then drop the message.
+            for (int value : searchPath) {
+                if (neighbor.getPeerID() == value) {
+                    return;
                 }
-                neighbor.lookup(buyerID, product, hopCount-1, newSearchPath, sequenceNumber);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
             }
-        });
+            neighbor.lookup(buyerID, product, hopCount - 1, newSearchPath, sequenceNumber);
+        }
     }
 
     protected int getPeerIndex(int[] replyPath) {

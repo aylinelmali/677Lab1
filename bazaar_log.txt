@@ -1,0 +1,347 @@
+20.10.2024 19:28:14.571 ########## START INITIAL SETUP ##########
+20.10.2024 19:28:14.577 Peer 0 (Buyer)
+20.10.2024 19:28:14.581 Peer 1 (Seller), Product: SALT, Stock: 7
+20.10.2024 19:28:14.582 Peer 2 (Buyer)
+20.10.2024 19:28:14.582 Peer 3 (Seller), Product: FISH, Stock: 14
+20.10.2024 19:28:14.583 Peer 4 (Buyer)
+20.10.2024 19:28:14.584 Peer 5 (Seller), Product: SALT, Stock: 5
+20.10.2024 19:28:14.584 ########### END INITIAL SETUP ###########
+20.10.2024 19:28:15.590 Lookup from buyer 2 for SALT initiated
+20.10.2024 19:28:15.590 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:15.597 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:15.598 Lookup from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:15.603 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:15.603 Lookup request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:15.604 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:15.605 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:15.606 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:15.607 Reply from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:15.608 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:15.608 Reply from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:15.610 Lookup from buyer 2 for SALT forwarded by peer 3
+20.10.2024 19:28:16.583 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:16.586 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:16.588 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:16.589 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:17.589 Lookup from buyer 4 for FISH initiated
+20.10.2024 19:28:17.590 Buy request from buyer 2 for SALT initiated
+20.10.2024 19:28:17.591 Lookup request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:17.591 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:17.592 Buy request from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:17.592 Reply from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:17.593 Buy request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:17.593 Lookup from buyer 4 for FISH forwarded by peer 5
+20.10.2024 19:28:17.595 Lookup from buyer 4 for FISH dropped by peer 0
+20.10.2024 19:28:17.597 Bought SALT from seller 1. Remaining stock: 6
+20.10.2024 19:28:17.598 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:17.600 Ack from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:17.601 Ack from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:18.583 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:18.585 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:18.587 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:18.589 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:19.586 Buy request from buyer 4 for FISH initiated
+20.10.2024 19:28:19.587 Lookup from buyer 2 for FISH initiated
+20.10.2024 19:28:19.588 Lookup from buyer 2 for FISH forwarded by peer 0
+20.10.2024 19:28:19.588 Buy request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:19.589 Bought FISH from seller 3. Remaining stock: 13
+20.10.2024 19:28:19.589 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:19.589 Lookup from buyer 2 for FISH dropped by peer 1
+20.10.2024 19:28:19.590 Ack from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:19.591 Lookup from buyer 2 for FISH forwarded by peer 1
+20.10.2024 19:28:19.592 Lookup from buyer 2 for FISH dropped by peer 0
+20.10.2024 19:28:19.594 Lookup request from buyer 2 for FISH arrived at seller 3
+20.10.2024 19:28:19.595 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:19.595 Reply from seller 3 for FISH arrived at buyer 2
+20.10.2024 19:28:20.583 Lookup from buyer 0 for SALT initiated
+20.10.2024 19:28:20.586 Lookup request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:20.586 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:20.587 Reply from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:20.588 Lookup from buyer 0 for SALT forwarded by peer 2
+20.10.2024 19:28:20.590 Lookup request from buyer 0 for SALT arrived at seller 5
+20.10.2024 19:28:20.590 Reply from seller 5 for SALT initiated
+20.10.2024 19:28:20.590 Reply from seller 5 for SALT arrived at buyer 0
+20.10.2024 19:28:21.587 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:21.588 Buy request from buyer 2 for FISH initiated
+20.10.2024 19:28:21.590 Buy request from buyer 2 for FISH arrived at seller 3
+20.10.2024 19:28:21.591 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:21.591 Bought FISH from seller 3. Remaining stock: 12
+20.10.2024 19:28:21.591 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:21.592 Ack from seller 3 for FISH arrived at buyer 2
+20.10.2024 19:28:21.592 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:21.593 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:21.594 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:21.594 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:22.583 Buy request from buyer 0 for SALT initiated
+20.10.2024 19:28:22.586 Buy request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:22.586 Bought SALT from seller 1. Remaining stock: 5
+20.10.2024 19:28:22.587 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:22.588 Ack from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:23.585 Lookup from buyer 2 for SALT initiated
+20.10.2024 19:28:23.586 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:23.588 Lookup from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:23.588 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:23.589 Lookup request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:23.589 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:23.589 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:23.590 Reply from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:23.590 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:23.590 Reply from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:23.591 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:23.592 Lookup from buyer 2 for SALT forwarded by peer 3
+20.10.2024 19:28:23.592 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:24.578 Lookup from buyer 0 for FISH initiated
+20.10.2024 19:28:24.581 Lookup from buyer 0 for FISH forwarded by peer 1
+20.10.2024 19:28:24.582 Lookup from buyer 0 for FISH forwarded by peer 2
+20.10.2024 19:28:24.583 Lookup from buyer 0 for FISH forwarded by peer 5
+20.10.2024 19:28:25.586 Buy request from buyer 2 for SALT initiated
+20.10.2024 19:28:25.588 Lookup from buyer 4 for FISH initiated
+20.10.2024 19:28:25.589 Buy request from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:25.590 Lookup request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:25.590 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:25.590 Buy request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:25.591 Bought SALT from seller 1. Remaining stock: 4
+20.10.2024 19:28:25.591 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:25.591 Reply from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:25.591 Ack from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:25.592 Lookup from buyer 4 for FISH forwarded by peer 5
+20.10.2024 19:28:25.593 Ack from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:25.593 Lookup from buyer 4 for FISH dropped by peer 0
+20.10.2024 19:28:26.578 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:26.581 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:26.582 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:26.583 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:27.585 Buy request from buyer 4 for FISH initiated
+20.10.2024 19:28:27.587 Lookup from buyer 2 for FISH initiated
+20.10.2024 19:28:27.588 Buy request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:27.588 Bought FISH from seller 3. Remaining stock: 11
+20.10.2024 19:28:27.588 Lookup from buyer 2 for FISH forwarded by peer 0
+20.10.2024 19:28:27.588 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:27.589 Ack from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:27.589 Lookup from buyer 2 for FISH dropped by peer 1
+20.10.2024 19:28:27.591 Lookup from buyer 2 for FISH forwarded by peer 1
+20.10.2024 19:28:27.592 Lookup from buyer 2 for FISH dropped by peer 0
+20.10.2024 19:28:27.593 Lookup request from buyer 2 for FISH arrived at seller 3
+20.10.2024 19:28:27.593 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:27.594 Reply from seller 3 for FISH arrived at buyer 2
+20.10.2024 19:28:28.584 Lookup from buyer 0 for SALT initiated
+20.10.2024 19:28:28.588 Lookup request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:28.589 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:28.589 Reply from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:28.590 Lookup from buyer 0 for SALT forwarded by peer 2
+20.10.2024 19:28:28.591 Lookup request from buyer 0 for SALT arrived at seller 5
+20.10.2024 19:28:28.591 Reply from seller 5 for SALT initiated
+20.10.2024 19:28:28.592 Reply from seller 5 for SALT arrived at buyer 0
+20.10.2024 19:28:29.588 Buy request from buyer 2 for FISH initiated
+20.10.2024 19:28:29.589 Lookup from buyer 4 for SALT initiated
+20.10.2024 19:28:29.590 Buy request from buyer 2 for FISH arrived at seller 3
+20.10.2024 19:28:29.591 Lookup from buyer 4 for SALT forwarded by peer 3
+20.10.2024 19:28:29.591 Bought FISH from seller 3. Remaining stock: 10
+20.10.2024 19:28:29.591 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:29.592 Lookup request from buyer 4 for SALT arrived at seller 1
+20.10.2024 19:28:29.592 Ack from seller 3 for FISH arrived at buyer 2
+20.10.2024 19:28:29.592 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:29.593 Reply from seller 1 for SALT forwarded by peer 3
+20.10.2024 19:28:29.593 Reply from seller 1 for SALT arrived at buyer 4
+20.10.2024 19:28:29.594 Lookup from buyer 4 for SALT dropped by peer 2
+20.10.2024 19:28:29.595 Lookup request from buyer 4 for SALT arrived at seller 5
+20.10.2024 19:28:29.596 Reply from seller 5 for SALT initiated
+20.10.2024 19:28:29.596 Reply from seller 5 for SALT arrived at buyer 4
+20.10.2024 19:28:30.583 Buy request from buyer 0 for SALT initiated
+20.10.2024 19:28:30.585 Buy request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:30.586 Bought SALT from seller 1. Remaining stock: 3
+20.10.2024 19:28:30.586 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:30.587 Ack from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:31.584 Lookup from buyer 2 for SALT initiated
+20.10.2024 19:28:31.587 Lookup from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:31.588 Buy request from buyer 4 for SALT initiated
+20.10.2024 19:28:31.588 Lookup request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:31.588 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:31.589 Buy request from buyer 4 for SALT forwarded by peer 3
+20.10.2024 19:28:31.589 Buy request from buyer 4 for SALT arrived at seller 1
+20.10.2024 19:28:31.590 Reply from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:31.590 Reply from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:31.591 Bought SALT from seller 1. Remaining stock: 2
+20.10.2024 19:28:31.591 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:31.592 Ack from seller 1 for SALT forwarded by peer 3
+20.10.2024 19:28:31.593 Ack from seller 1 for SALT arrived at buyer 4
+20.10.2024 19:28:31.594 Lookup from buyer 2 for SALT forwarded by peer 3
+20.10.2024 19:28:32.578 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:32.581 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:32.582 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:32.584 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:33.587 Lookup from buyer 4 for FISH initiated
+20.10.2024 19:28:33.589 Buy request from buyer 2 for SALT initiated
+20.10.2024 19:28:33.590 Lookup request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:33.591 Buy request from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:33.591 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:33.591 Buy request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:33.592 Bought SALT from seller 1. Remaining stock: 1
+20.10.2024 19:28:33.592 Reply from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:33.592 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:33.593 Ack from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:33.593 Lookup from buyer 4 for FISH forwarded by peer 5
+20.10.2024 19:28:33.593 Ack from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:33.594 Lookup from buyer 4 for FISH dropped by peer 0
+20.10.2024 19:28:34.580 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:34.582 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:34.583 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:34.584 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:35.587 Lookup from buyer 2 for SALT initiated
+20.10.2024 19:28:35.588 Buy request from buyer 4 for FISH initiated
+20.10.2024 19:28:35.588 Lookup from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:35.589 Buy request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:35.589 Bought FISH from seller 3. Remaining stock: 9
+20.10.2024 19:28:35.589 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:35.589 Lookup request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:35.589 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:35.590 Ack from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:35.590 Reply from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:35.590 Reply from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:35.591 Lookup from buyer 2 for SALT forwarded by peer 3
+20.10.2024 19:28:36.583 Lookup from buyer 0 for SALT initiated
+20.10.2024 19:28:36.585 Lookup request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:36.585 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:36.586 Reply from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:36.587 Lookup from buyer 0 for SALT forwarded by peer 2
+20.10.2024 19:28:36.588 Lookup request from buyer 0 for SALT arrived at seller 5
+20.10.2024 19:28:36.588 Reply from seller 5 for SALT initiated
+20.10.2024 19:28:36.591 Reply from seller 5 for SALT arrived at buyer 0
+20.10.2024 19:28:37.588 Buy request from buyer 2 for SALT initiated
+20.10.2024 19:28:37.589 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:37.590 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:37.591 Buy request from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:37.591 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:37.591 Buy request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:37.592 Bought SALT from seller 1. Remaining stock: 0
+20.10.2024 19:28:37.592 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:37.592 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:37.593 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:37.593 Ack from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:37.594 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:37.594 Ack from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:38.583 Buy request from buyer 0 for SALT initiated
+20.10.2024 19:28:38.591 Buy request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:38.592 Bought SALT from seller 1. Remaining stock: 12
+20.10.2024 19:28:38.592 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:38.593 Ack from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:39.588 Lookup from buyer 2 for BOARS initiated
+20.10.2024 19:28:39.589 Lookup from buyer 4 for FISH initiated
+20.10.2024 19:28:39.593 Lookup request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:39.593 Lookup from buyer 2 for BOARS forwarded by peer 0
+20.10.2024 19:28:39.594 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:39.594 Reply from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:39.595 Lookup from buyer 2 for BOARS dropped by peer 1
+20.10.2024 19:28:39.595 Lookup from buyer 4 for FISH forwarded by peer 5
+20.10.2024 19:28:39.596 Lookup from buyer 2 for BOARS forwarded by peer 1
+20.10.2024 19:28:39.596 Lookup from buyer 4 for FISH dropped by peer 0
+20.10.2024 19:28:39.596 Lookup from buyer 2 for BOARS dropped by peer 0
+20.10.2024 19:28:39.597 Lookup from buyer 2 for BOARS forwarded by peer 3
+20.10.2024 19:28:39.598 Lookup from buyer 2 for BOARS dropped by peer 1
+20.10.2024 19:28:40.579 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:40.581 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:40.582 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:40.583 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:41.587 Lookup from buyer 2 for BOARS initiated
+20.10.2024 19:28:41.588 Buy request from buyer 4 for FISH initiated
+20.10.2024 19:28:41.589 Lookup from buyer 2 for BOARS forwarded by peer 0
+20.10.2024 19:28:41.590 Buy request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:41.590 Bought FISH from seller 3. Remaining stock: 8
+20.10.2024 19:28:41.590 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:41.590 Lookup from buyer 2 for BOARS dropped by peer 1
+20.10.2024 19:28:41.590 Ack from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:41.591 Lookup from buyer 2 for BOARS forwarded by peer 1
+20.10.2024 19:28:41.592 Lookup from buyer 2 for BOARS dropped by peer 0
+20.10.2024 19:28:41.592 Lookup from buyer 2 for BOARS forwarded by peer 3
+20.10.2024 19:28:41.593 Lookup from buyer 2 for BOARS dropped by peer 1
+20.10.2024 19:28:42.582 Lookup from buyer 0 for FISH initiated
+20.10.2024 19:28:42.585 Lookup from buyer 0 for FISH forwarded by peer 1
+20.10.2024 19:28:42.586 Lookup from buyer 0 for FISH forwarded by peer 2
+20.10.2024 19:28:42.587 Lookup from buyer 0 for FISH forwarded by peer 5
+20.10.2024 19:28:43.587 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:43.589 Lookup from buyer 2 for SALT initiated
+20.10.2024 19:28:43.590 Lookup from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:43.590 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:43.591 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:43.591 Lookup request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:43.591 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:43.592 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:43.592 Reply from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:43.592 Reply from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:43.593 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:43.594 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:43.594 Lookup from buyer 2 for SALT forwarded by peer 3
+20.10.2024 19:28:44.581 Lookup from buyer 0 for FISH initiated
+20.10.2024 19:28:44.584 Lookup from buyer 0 for FISH forwarded by peer 1
+20.10.2024 19:28:44.585 Lookup from buyer 0 for FISH forwarded by peer 2
+20.10.2024 19:28:44.585 Lookup from buyer 0 for FISH forwarded by peer 5
+20.10.2024 19:28:45.587 Buy request from buyer 2 for SALT initiated
+20.10.2024 19:28:45.589 Lookup from buyer 4 for FISH initiated
+20.10.2024 19:28:45.589 Buy request from buyer 2 for SALT forwarded by peer 0
+20.10.2024 19:28:45.590 Lookup request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:45.590 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:45.590 Buy request from buyer 2 for SALT arrived at seller 1
+20.10.2024 19:28:45.591 Bought SALT from seller 1. Remaining stock: 11
+20.10.2024 19:28:45.591 Reply from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:45.591 Ack from seller 1 for SALT initiated
+20.10.2024 19:28:45.591 Ack from seller 1 for SALT forwarded by peer 0
+20.10.2024 19:28:45.592 Lookup from buyer 4 for FISH forwarded by peer 5
+20.10.2024 19:28:45.592 Ack from seller 1 for SALT arrived at buyer 2
+20.10.2024 19:28:45.592 Lookup from buyer 4 for FISH dropped by peer 0
+20.10.2024 19:28:46.583 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:46.586 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:46.587 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:46.588 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:47.587 Lookup from buyer 2 for BOARS initiated
+20.10.2024 19:28:47.588 Buy request from buyer 4 for FISH initiated
+20.10.2024 19:28:47.589 Lookup from buyer 2 for BOARS forwarded by peer 0
+20.10.2024 19:28:47.589 Buy request from buyer 4 for FISH arrived at seller 3
+20.10.2024 19:28:47.590 Bought FISH from seller 3. Remaining stock: 7
+20.10.2024 19:28:47.590 Lookup from buyer 2 for BOARS dropped by peer 1
+20.10.2024 19:28:47.590 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:47.590 Ack from seller 3 for FISH arrived at buyer 4
+20.10.2024 19:28:47.591 Lookup from buyer 2 for BOARS forwarded by peer 1
+20.10.2024 19:28:47.591 Lookup from buyer 2 for BOARS dropped by peer 0
+20.10.2024 19:28:47.592 Lookup from buyer 2 for BOARS forwarded by peer 3
+20.10.2024 19:28:47.592 Lookup from buyer 2 for BOARS dropped by peer 1
+20.10.2024 19:28:48.582 Lookup from buyer 0 for BOARS initiated
+20.10.2024 19:28:48.584 Lookup from buyer 0 for BOARS forwarded by peer 1
+20.10.2024 19:28:48.585 Lookup from buyer 0 for BOARS forwarded by peer 2
+20.10.2024 19:28:48.586 Lookup from buyer 0 for BOARS forwarded by peer 5
+20.10.2024 19:28:49.585 Lookup from buyer 2 for FISH initiated
+20.10.2024 19:28:49.587 Lookup from buyer 2 for FISH forwarded by peer 0
+20.10.2024 19:28:49.588 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:49.588 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:49.589 Lookup from buyer 2 for FISH dropped by peer 1
+20.10.2024 19:28:49.589 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:49.590 Lookup from buyer 2 for FISH forwarded by peer 1
+20.10.2024 19:28:49.590 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:49.591 Lookup from buyer 2 for FISH dropped by peer 0
+20.10.2024 19:28:49.592 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:49.592 Lookup request from buyer 2 for FISH arrived at seller 3
+20.10.2024 19:28:49.593 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:49.593 Reply from seller 3 for FISH initiated
+20.10.2024 19:28:49.593 Reply from seller 3 for FISH arrived at buyer 2
+20.10.2024 19:28:50.582 Lookup from buyer 0 for FISH initiated
+20.10.2024 19:28:50.584 Lookup from buyer 0 for FISH forwarded by peer 1
+20.10.2024 19:28:50.585 Lookup from buyer 0 for FISH forwarded by peer 2
+20.10.2024 19:28:50.586 Lookup from buyer 0 for FISH forwarded by peer 5
+20.10.2024 19:28:51.588 Buy request from buyer 2 for FISH initiated
+20.10.2024 19:28:51.589 Lookup from buyer 4 for BOARS initiated
+20.10.2024 19:28:51.591 Buy request from buyer 2 for FISH arrived at seller 3
+20.10.2024 19:28:51.591 Bought FISH from seller 3. Remaining stock: 6
+20.10.2024 19:28:51.591 Lookup from buyer 4 for BOARS forwarded by peer 3
+20.10.2024 19:28:51.592 Ack from seller 3 for FISH initiated
+20.10.2024 19:28:51.592 Ack from seller 3 for FISH arrived at buyer 2
+20.10.2024 19:28:51.592 Lookup from buyer 4 for BOARS dropped by peer 1
+20.10.2024 19:28:51.593 Lookup from buyer 4 for BOARS dropped by peer 2
+20.10.2024 19:28:51.593 Lookup from buyer 4 for BOARS forwarded by peer 5
+20.10.2024 19:28:51.594 Lookup from buyer 4 for BOARS dropped by peer 0
+20.10.2024 19:28:52.578 Lookup from buyer 0 for SALT initiated
+20.10.2024 19:28:52.580 Lookup request from buyer 0 for SALT arrived at seller 1
+20.10.2024 19:28:52.580 Reply from seller 1 for SALT initiated
+20.10.2024 19:28:52.580 Reply from seller 1 for SALT arrived at buyer 0
+20.10.2024 19:28:52.581 Lookup from buyer 0 for SALT forwarded by peer 2
+20.10.2024 19:28:52.582 Lookup request from buyer 0 for SALT arrived at seller 5
+20.10.2024 19:28:52.582 Reply from seller 5 for SALT initiated
+20.10.2024 19:28:52.582 Reply from seller 5 for SALT arrived at buyer 0

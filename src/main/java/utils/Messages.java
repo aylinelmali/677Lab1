@@ -2,7 +2,7 @@ package utils;
 
 import product.Product;
 
-import java.awt.*;
+import java.util.List;
 
 public class Messages {
     public static String getLookupForwardMessage(int buyerID, Product product, int forwardPeerID) {
@@ -63,6 +63,10 @@ public class Messages {
 
     public static String getWrongProductMessage(int buyerID, Product product, int sellerID) {
         return "Buyer " + buyerID + " contacted seller " + sellerID + " with wrong product " + product;
+    }
+
+    public static String getStatisticsMessage(int peerID, List<Long> deltas) {
+        return "Peer " + peerID + " has an average response time of " + deltas.stream().mapToLong(Long::longValue).average().orElse(0) + ". Deltas: " + deltas;
     }
 
     public static String getForwardErrorMessage() {

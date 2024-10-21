@@ -107,7 +107,7 @@ public class Seller extends APeer {
                 Logger.log(Messages.getBuyForwardMessage(path[0], product, peerID));
                 neighbor.buy(product, path);
             } else {
-               Logger.log(Messages.getForwardErrorMessage());
+                Logger.log(Messages.getForwardErrorMessage());
             }
         }
     }
